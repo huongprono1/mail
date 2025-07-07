@@ -25,7 +25,9 @@
                     {{__('Create')}}
                 </x-filament::button>
                     <x-filament::button x-on:click="$wire.dispatch('refreshMail');"
-                                        icon="heroicon-s-arrow-path">
+                                        icon="heroicon-s-arrow-path"
+                                        :disabled="!$this->selectedMail"
+                    >
                         {{__('Refresh')}}
                     </x-filament::button>
 
@@ -35,10 +37,16 @@
                         {{__('Create random')}}
                     </x-filament::button>
 
-                    <x-filament::button wire:click="removeMail" icon="heroicon-o-trash" color="danger">
+                <x-filament::button wire:click="removeMail"
+                                    icon="heroicon-o-trash"
+                                    color="danger"
+                                    :disabled="!$this->selectedMail"
+                >
                         {{__('Delete')}}
                     </x-filament::button>
-                    <x-filament::dropdown max-height="400px" teleport="true">
+                <x-filament::dropdown max-height="400px" teleport="true"
+                                      :disabled="$this->countMail == 0"
+                >
                         <x-slot name="trigger">
                             <x-filament::button color="warning" icon="heroicon-o-list-bullet"></x-filament::button>
                         </x-slot>
