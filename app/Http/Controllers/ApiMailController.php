@@ -3,22 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Datas\ApiResponse;
-use App\Http\Resources\DomainResource;
-use App\Http\Resources\MailResource;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\NetflixCodeResource;
-use App\Models\Domain;
-use App\Models\Mail;
-use App\Models\Message;
-use App\Models\NetflixCode;
-use App\Models\User;
-use BezhanSalleh\FilamentExceptions\Facades\FilamentExceptions;
-use Exception;
-use Glorand\Model\Settings\Exceptions\ModelSettingsException;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
 
 class ApiMailController extends Controller
 {
@@ -47,7 +34,7 @@ class ApiMailController extends Controller
                 $query
                     ->select(['id', 'sender_name', 'from', 'to', 'subject', 'created_at', 'read_at'])
                     ->latest()
-                    ->first()
+                    ->firstOrFail()
             )
         );
     }
