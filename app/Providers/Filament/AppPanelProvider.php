@@ -3,7 +3,6 @@
 namespace App\Providers\Filament;
 
 use App\Filament\App\Pages\Home;
-use App\Filament\App\Pages\Inbox;
 use App\Filament\App\Pages\ReadPage;
 use App\Filament\App\Pages\Register;
 use App\Filament\App\Pages\UserDomains;
@@ -12,7 +11,6 @@ use App\Filament\App\Pages\UserPlanHistory;
 use App\Http\Middleware\AutoLoginViaTelegram;
 use App\Http\Middleware\SetLocale;
 use App\Livewire\CustomProfileComponent;
-use App\Settings\SiteSettings;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Filament\FontProviders\GoogleFontProvider;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -153,10 +151,6 @@ class AppPanelProvider extends PanelProvider
                                     ->icon('heroicon-o-arrow-path-rounded-square')
                                     ->isActiveWhen(fn() => request()->fullUrlIs(ReadPage::getUrl(['slug' => 'recovery-deleted-mail'])))
                                     ->sort(10),
-                                NavigationItem::make(__('Telegram group'))
-                                    ->url('https://t.me/tempmail_group', true)
-                                    ->icon('fab-telegram-plane')
-                                    ->sort(11),
                             ]),
                     ]);
             })
