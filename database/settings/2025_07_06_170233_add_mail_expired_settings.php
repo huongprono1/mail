@@ -7,6 +7,7 @@ return new class extends SettingsMigration {
     {
         try {
 
+            $this->migrator->add('mail.servers', []);
             $this->migrator->add('mail.message_expiration_days', 7);
 
         } catch (\Exception $e) {
