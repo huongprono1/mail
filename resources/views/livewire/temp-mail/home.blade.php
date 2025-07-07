@@ -44,10 +44,9 @@
                 >
                         {{__('Delete')}}
                     </x-filament::button>
-                <x-filament::dropdown max-height="400px" teleport="true"
-                                      :disabled="$this->countMail == 0"
-                >
-                        <x-slot name="trigger">
+                <x-filament::dropdown max-height="400px" teleport="true">
+                    <x-slot name="trigger"
+                            :disabled="$this->countMail == 0">
                             <x-filament::button color="warning" icon="heroicon-o-list-bullet"></x-filament::button>
                         </x-slot>
                         <x-filament::dropdown.list>
