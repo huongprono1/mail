@@ -39,7 +39,7 @@ class MailBackendSettingPage extends SettingsPage
                 Section::make('Message settings')
                     ->default('Time expires for messages in the inbox.')
                     ->schema([
-                        TextInput::make('message_expire_days')
+                        TextInput::make('message_expiration_days')
                             ->label('Message Expire Days')
                             ->numeric()
                             ->default(7)
