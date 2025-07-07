@@ -1,0 +1,94 @@
+@import '/vendor/filament/filament/resources/css/theme.css';
+@config 'tailwind.config.js';
+@layer base {
+    a:not(.fi-btn) {
+        @apply text-sky-700 hover:text-sky-600
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-transparent shadow-sm
+    }
+
+    ::-webkit-scrollbar {
+        @apply w-1 h-1 bg-transparent
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply rounded bg-primary-500
+        /*color trackbar*/
+    }
+}
+
+.page h1, .page h2, .page h3, .page h4, .page h5, .page h6 {
+    @apply my-4
+}
+
+h1 {
+    @apply text-4xl font-semibold
+}
+
+h2 {
+    @apply text-3xl font-medium
+}
+
+h3 {
+    @apply text-2xl font-medium
+}
+
+.text-skin-gray {
+    @apply text-gray-700 dark:text-gray-300
+}
+
+.page p {
+    @apply py-2
+}
+
+.page ul:not(.tocs) {
+    @apply marker:text-gray-500 list-disc pl-6 space-y-2 text-skin-gray pt-3 pb-3;
+}
+
+.page ol:not(.tocs) {
+    @apply marker:text-gray-500 list-decimal pl-6 space-y-2 text-skin-gray pt-3 pb-3;
+}
+
+/*pre {*/
+/*    @apply p-4 my-4 rounded-lg overflow-x-auto;*/
+/*}*/
+
+/*:not(pre) > code {*/
+/*    @apply text-xs px-2 py-1 ring-inset rounded-md ring-1 ring-gray-400/30 text-gray-600 bg-gray-400/10 dark:text-gray-400 dark:bg-gray-400/10*/
+/*}*/
+
+hr {
+    @apply h-px my-8 bg-gray-200 border-0 dark:bg-gray-700
+}
+
+.has-list > p {
+    @apply my-2
+}
+
+.has-list > ul {
+    @apply list-disc space-y-2 ml-6 my-2 marker:text-gray-400
+}
+
+.content-table table {
+    @apply w-full text-sm border-collapse;
+}
+
+.content-table th,
+.content-table td {
+    @apply px-3 py-2 text-left align-top;
+}
+
+.content-table tbody tr {
+    @apply border-b border-gray-300
+    dark:border-gray-700/60;
+}
+
+.content-table tbody tr:last-child {
+    @apply border-b-0;
+}
+
+.content-table thead th {
+    @apply border-b border-gray-300 dark:border-gray-600 font-medium;
+}

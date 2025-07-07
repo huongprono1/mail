@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+
+[x-cloak] {
+    display: none;
+}
+
+@layer base {
+    :root {
+        --color-text-base: #1f2937;
+        --color-text-muted: #6b7280;
+        --color-text-inverted: #ffffff;
+        --color-fill: #ffffff;
+        --color-button-accent: #2563eb;
+        --color-button-accent-hover: #1d4ed8;
+
+        /* New color variables */
+        --color-text-success: #10b981;
+        --color-text-info: #3b82f6;
+        --color-text-warning: #f59e0b;
+        --color-text-danger: #ef4444;
+    }
+
+
+    .dark {
+        --color-text-base: rgba(243, 244, 246, 0.9);
+        --color-text-muted: #9ca3af;
+        --color-text-inverted: #1f2937;
+        --color-fill: #111827;
+        --color-button-accent: #3b82f6;
+        --color-button-accent-hover: #60a5fa;
+
+        /* New color variables for dark mode */
+        --color-text-success: #34d399;
+        --color-text-info: #60a5fa;
+        --color-text-warning: #fbbf24;
+        --color-text-danger: #f87171;
+    }
+
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .print-section, .print-section * {
+            visibility: visible;
+        }
+
+        .print-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
+
+}
+
+@layer utilities {
+    *::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    *::-webkit-scrollbar-track {
+        border-radius: 100vh;
+        @apply dark:bg-gray-900;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        @apply bg-gray-700 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-500;
+        border-radius: 100vh;
+    }
+}
+
+
+.text-skin-gray {
+    @apply text-gray-700 dark:text-gray-300
+}
+

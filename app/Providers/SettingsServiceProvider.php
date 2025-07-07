@@ -23,11 +23,7 @@ class SettingsServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $metaSetting = app(MetasSettings::class);
-        $paymentSetting = app(PaymentsSettings::class);
         $siteSetting = app(SiteSettings::class);
-        View::share('metaSetting', $metaSetting);
-        View::share('paymentSetting', $paymentSetting);
         View::share('siteSetting', $siteSetting);
     }
 }

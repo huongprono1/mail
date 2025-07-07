@@ -1,0 +1,71 @@
+name: Laravel Build and Deploy
+
+on:
+  push:
+    branches:
+      - build_hosting
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # name: PHP ${{ matrix.php-versions }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@master
+
+      - name: Setup Enviroment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          # coverage: none
+          # extensions: mbstring,PDO,grpc,tokenizer,xml,json,ctype,fileinfo,openssl,bcmath,pdo_sqlite
+        # env:
+        #     runner: self-hosted
+      - name: Install composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Build assets with Vite
+        run: npm run build  # Đảm bảo script "build" đã được định nghĩa trong package.json
+
+      - name: Setup SSH
+        run: |
+          mkdir ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+          cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+          chmod 600 ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa.pub
+          # echo 'UserKnownHostsFile ~/.ssh/known_hosts' >> ~/.ssh/config
+          ssh-keyscan -p ${{ secrets.REMOTE_PORT }} -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+      - name: Deploy to Hosting
+        run: |
+          sshpass -p '${{ secrets.SSH_PASSWORD }}' ssh -p ${{ secrets.REMOTE_PORT }} ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "cd ${{ secrets.REMOTE_TARGET }} && rm -rf *"
+          rsync -azh --stats --rsh="sshpass -p '${{ secrets.SSH_PASSWORD }}' ssh -p ${{ secrets.REMOTE_PORT }}" ./* ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
+          sshpass -p '${{ secrets.SSH_PASSWORD }}' ssh -p ${{ secrets.REMOTE_PORT }} ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} << 'EOF'
+            cd ${{ secrets.REMOTE_TARGET }}
+            php artisan optimize:clear
+            php artisan filament:optimize
+            php artisan route:trans:cache
+          EOF
+      - name: send telegram message on push
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            🚀 New Release Published!
+            Actor: ${{ github.actor }}
+            Commit message: ${{ github.event.commits[0].message }}
+            Branch: ${{ github.ref }}
+
+            Repository: ${{ github.repository }}
+
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
