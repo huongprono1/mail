@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Mail;
 use App\Models\User;
+use App\Settings\MailBackendSetting;
 use Filament\Notifications\Notification;
 use Illuminate\Console\Command;
 
@@ -21,15 +22,17 @@ class DeleteMailExpired extends Command
      *
      * @var string
      */
-    protected $description = 'Delete mail not owner and expired 7 days';
+    protected $description = 'Delete mail not owner and expired';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
+        $days = app(MailBackendSetting::class)->message_expiration_days ?? 7;
+
         $count = Mail::query()
-            ->whereDate('updated_at', '<', now()->subDays(7))
+            ->whereDate('updated_at', '<', now()->subDays($days))
             ->whereNull('user_id')
             ->delete();
 
@@ -37,7 +40,7 @@ class DeleteMailExpired extends Command
         if ($count) {
             $user = User::findOrFail(1);
             Notification::make()
-                ->title('Xóa mail người dùng khách quá 7 ngày')
+                ->title("Xóa mail người dùng khách quá $days ngày")
                 ->body("Đã xóa $count mail của người dùng không đăng nhập.")
                 ->success()
                 ->sendToDatabase($user, isEventDispatched: true);
