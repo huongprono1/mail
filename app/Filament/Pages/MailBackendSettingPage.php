@@ -32,7 +32,6 @@ class MailBackendSettingPage extends SettingsPage
                     ->schema([
                         Repeater::make('servers')
                             ->label('Domain')
-                            ->hint('{!! setting("mail.servers") !!}')
                             ->simple(
                                 TextInput::make('domain')->label('Domain')->required(),
                             ),
