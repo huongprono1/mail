@@ -9,7 +9,6 @@ use App\Traits\HasMailable;
 use App\Traits\Toastable;
 use Exception;
 use Filament\Facades\Filament;
-use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -63,7 +62,7 @@ class Home extends Component
 
     /**
      */
-    public function saveCustomMail(): null|bool
+    public function saveCustomMail()
     {
         try {
             $this->validate();
