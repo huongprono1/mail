@@ -22,6 +22,6 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::post('/user/update-fcm-token', [ApiController::class, 'updateFcmToken']);
 });
 
-Route::group(['middleware' => [AuthenticationWithQueryString::class, 'verified']], function () {
+Route::group(['middleware' => [AuthenticationWithQueryString::class, 'verified', 'api-limit', 'api-log']], function () {
     Route::get('message', [ApiMailController::class, 'getMessageOfMail'])->name('mail.inbox');
 });
