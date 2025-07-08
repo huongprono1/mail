@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Datas\ApiResponse;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\NetflixCodeResource;
+use App\Models\Domain;
 use App\Models\Mail;
 use Illuminate\Http\Request;
 
@@ -17,16 +18,26 @@ class ApiMailController extends Controller
             'withSeen' => 'boolean|nullable',
         ]);
 
+        // auto generate the email if it is not provided
+        $email = $request->input('email');
+        auth()->user()->mails()->firstOrCreate([
+            'email' => $email,
+        ], [
+            'domain_id' => Domain::where('name', get_domain_from_email($email)), // Assuming domain_id is not required for this operation
+            'user_id' => $request->user()->id,
+            'created_at' => now()
+        ]);
+
         if ($request->user()->isAdmin()) {
             $query = Mail::with('messages')
-                ->where('email', $request->input('email'))
+                ->where('email', $email)
                 ->firstOrFail()
                 ->messages();
         } else {
             $query = $request->user()
                 ->mails()
                 ->with('messages')
-                ->where('email', $request->input('email'))
+                ->where('email', $email)
                 ->firstOrFail()
                 ->messages();
         }

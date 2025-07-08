@@ -111,3 +111,16 @@ if (! function_exists('setting')) {
         return json_decode($setting->getAttribute('payload'));
     }
 }
+
+// create function get domain from email
+if (!function_exists('get_domain_from_email')) {
+    function get_domain_from_email(string $email): ?string
+    {
+        $parts = explode('@', $email);
+        if (count($parts) !== 2) {
+            return null; // Invalid email format
+        }
+
+        return $parts[1];
+    }
+}
