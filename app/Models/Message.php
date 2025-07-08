@@ -71,10 +71,12 @@ class Message extends Model
                     ->schema([
                         TextEntry::make('subject')->columnSpanFull(),
                         TextEntry::make('from'),
+                        TextEntry::make('sender_name'),
                         TextEntry::make('to'),
                         TextEntry::make('original_from'),
                         TextEntry::make('original_to'),
                         TextEntry::make('otp_code'),
+                        TextEntry::make('read_at'),
                     ])
                     ->compact()
                     ->columns(2),
