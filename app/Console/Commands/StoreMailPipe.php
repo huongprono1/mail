@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\NewMessageEvent;
+use App\Models\Domain;
 use App\Models\Mail;
 use App\Services\MailService;
 use Illuminate\Console\Command;
@@ -35,9 +36,13 @@ class StoreMailPipe extends Command
         $mail = Mail::getMailWithDomainActive($recipient);
 
         if (! $mail) {
-            Log::warning("Recipient {$recipient} not found in DB");
+            Log::warning("Recipient {$recipient} not found in DB. Creating new Mail entry.");
 
-            return 1;
+            $mail = Mail::create([
+                'email' => $recipient,
+                'domain_id' => Domain::where('name', get_domain_from_email($recipient))->first()->id ?? null,
+                'user_id' => null,
+            ]);
         }
 
         // Parse the raw email

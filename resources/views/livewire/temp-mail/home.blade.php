@@ -44,7 +44,8 @@
                 >
                         {{__('Delete')}}
                     </x-filament::button>
-                <x-filament::dropdown wire:dirty.class="border-yellow" wire:model.live="selectedMail">
+                <x-filament::dropdown max-height="400px" wire:dirty.class="border-yellow"
+                                      wire:model.live="selectedMail">
                     <x-slot name="trigger">
                         <x-filament::button
                             :disabled="$this->countMail == 0"
