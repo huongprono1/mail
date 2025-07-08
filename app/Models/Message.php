@@ -77,6 +77,8 @@ class Message extends Model
                         TextEntry::make('original_to'),
                         TextEntry::make('otp_code'),
                         TextEntry::make('read_at'),
+                        TextEntry::make('created_at'),
+                        TextEntry::make('updated_at'),
                     ])
                     ->compact()
                     ->columns(2),
