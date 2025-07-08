@@ -24,16 +24,20 @@ class ApiMailController extends Controller
         if (!$domain) {
             return ApiResponse::error('Domain not found.', 404);
         }
-        // auto generate the email if it is not provided
-        $request->user()->mails()->firstOrCreate([
-            'email' => $email,
-        ], [
-            'domain_id' => $domain->id, // Assuming domain_id is not required for this operation
-            'user_id' => $request->user()->id,
-            'created_at' => now()
-        ]);
+        // check mail exist in database
+        $mail = Mail::where('email', $email)->first();
+        if (!$mail) {
+            // if not exist, create new mail
+            $request->user()->mails()->firstOrCreate([
+                'email' => $email,
+            ], [
+                'domain_id' => $domain->id, // Assuming domain_id is not required for this operation
+                'user_id' => $request->user()->id,
+                'created_at' => now()
+            ]);
+        }
 
-        if ($request->user()->isAdmin()) {
+        if ($mail->isOwnedBy($request->user()) || $request->user()->isAdmin()) {
             $query = Mail::with('messages')
                 ->where('email', $email)
                 ->firstOrFail()
