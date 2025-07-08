@@ -60,6 +60,10 @@ class ApiMailController extends Controller
             return ApiResponse::error('No messages found for ' . $email, 404);
         }
 
+        // mark mail seen
+        if (is_null($message->read_at)) {
+            $message->markAsSeen();
+        }
 
         return ApiResponse::success(
             MessageResource::make(

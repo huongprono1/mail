@@ -94,4 +94,10 @@ class Message extends Model
     {
         return $this->belongsTo(Mail::class, 'email_id');
     }
+
+    public function markAsSeen(): void
+    {
+        $this->read_at = now();
+        $this->save();
+    }
 }
