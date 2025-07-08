@@ -40,7 +40,7 @@ class ApiMailController extends Controller
         return ApiResponse::success(
             MessageResource::make(
                 $query
-                    ->select(['id', 'sender_name', 'from', 'to', 'subject', 'created_at', 'read_at'])
+                    ->select(['id', 'sender_name', 'from', 'to', 'subject', 'created_at', 'read_at', 'body'])
                     ->latest()
                     ->firstOrFail()
             )

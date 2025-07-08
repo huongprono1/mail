@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Services\OtpService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,7 +24,7 @@ class MessageResource extends JsonResource
             $this->mergeWhen($this->body, [
                 'body' => $this->body,
             ]),
-            'otp_code' => $this->otp_code,
+            'otp_code' => $this->otp_code ?? (new OtpService($this->body))->getOtpCode(),
             'read_at' => $this->read_at,
             'status' => is_null($this->read_at) ? 'unseen' : 'seen',
             'created_at' => $this->created_at,
