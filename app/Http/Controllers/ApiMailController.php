@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Datas\ApiResponse;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\NetflixCodeResource;
+use App\Models\Mail;
 use Illuminate\Http\Request;
 
 class ApiMailController extends Controller
@@ -16,12 +17,19 @@ class ApiMailController extends Controller
             'withSeen' => 'boolean|nullable',
         ]);
 
-        $query = $request->user()
-            ->mails()
-            ->with('messages')
-            ->where('email', $request->input('email'))
-            ->firstOrFail()
-            ->messages();
+        if ($request->user()->isAdmin()) {
+            $query = Mail::with('messages')
+                ->where('email', $request->input('email'))
+                ->firstOrFail()
+                ->messages();
+        } else {
+            $query = $request->user()
+                ->mails()
+                ->with('messages')
+                ->where('email', $request->input('email'))
+                ->firstOrFail()
+                ->messages();
+        }
 
 
         if ($request->input('withSeen', false) === false) {
