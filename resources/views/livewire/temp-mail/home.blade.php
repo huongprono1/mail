@@ -44,7 +44,7 @@
                 >
                         {{__('Delete')}}
                     </x-filament::button>
-                <x-filament::dropdown teleport="true">
+                <x-filament::dropdown wire:dirty.class="border-yellow" wire:model.live="selectedMail">
                     <x-slot name="trigger">
                         <x-filament::button
                             :disabled="$this->countMail == 0"
@@ -52,13 +52,18 @@
                             icon="heroicon-o-list-bullet"></x-filament::button>
                         </x-slot>
                         <x-filament::dropdown.list>
-                            @foreach($this->mails as $idx => $item)
+                            @forelse($this->mails as $idx => $item)
                                 <x-filament::dropdown.list.item
                                     wire:click="selectMail({{$item->id}})"
-                                    x-on:click="close()">
+                                    x-on:click="close()"
+                                    :icon="$this->selectedMail->id == $item->id ? 'heroicon-o-check' : null">
                                     {{$item->email}}
                                 </x-filament::dropdown.list.item>
-                            @endforeach
+                            @empty
+                                <x-filament::dropdown.list.item disabled>
+                                    {{__('No mails found')}}
+                                </x-filament::dropdown.list.item>
+                            @endforelse
                         </x-filament::dropdown.list>
                     </x-filament::dropdown>
             </div>
@@ -66,7 +71,7 @@
 
     </x-filament::section>
 
-    @if($countMail)
-        @livewire('temp-mail.inbox')
+    @if($this->selectedMail)
+        @livewire('temp-mail.inbox', ['mail' => $this->selectedMail], key($this->selectedMail->id))
     @endif
 </div>

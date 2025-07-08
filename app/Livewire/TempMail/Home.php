@@ -3,18 +3,30 @@
 namespace App\Livewire\TempMail;
 
 use App\Exceptions\DomainNotFoundException;
+use App\Filament\App\Pages\ReadMail;
 use App\Models\Domain;
 use App\Models\Mail;
+use App\Models\Message;
 use App\Traits\HasMailable;
 use App\Traits\Toastable;
 use Exception;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Builder;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\HtmlString;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
-class Home extends Component
+class Home extends Component implements HasForms, HasTable
 {
-    use HasMailable, Toastable;
+    use Toastable;
+    use HasMailable, InteractsWithForms, InteractsWithTable;
 
     public $countMail = 0;
 
@@ -28,7 +40,7 @@ class Home extends Component
 
     public $domains;
 
-    public $selectedMail;
+    public ?Mail $selectedMail = null;
 
     public $mails;
 
@@ -36,11 +48,59 @@ class Home extends Component
         'reload' => '$refresh'
     ];
 
+    public function table(Table $table): Table
+    {
+        $mail = $this->selectedMail;
+
+        return $table
+            ->heading(new HtmlString('<span @click="navigator.clipboard.writeText(\'' . $mail?->email . '\')
+                  .then(() => $tooltip(\'' . __('Copied!') . '\', {theme:$store.theme}))
+                  .catch(() => $tooltip(\'' . __('Copy failed!') . '\', {theme:$store.theme}));">' . $mail?->email . '</span>'))
+            ->query(fn(): HasMany|Builder => $mail?->messages() ?? (new Mail())->messages()->whereRaw('0=1'))
+            ->inverseRelationship('messages')
+            ->columns([
+                TextColumn::make('sender_name')
+                    ->label('Sender')
+                    ->translateLabel()
+                    ->description(fn(Message $record): string => $record->from)
+                    ->weight(fn(Message $record): string => !$record->read_at ? 'bold' : '')
+                    ->color(fn(Message $record): string => !$record->read_at ? 'primary' : '')
+//                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('subject')
+                    ->label('Subject')
+                    ->translateLabel()
+                    ->color(fn(Message $record): string => !$record->read_at ? 'primary' : '')
+                    ->weight(fn(Message $record): string => !$record->read_at ? 'bold' : ''),
+//                    ->searchable(),
+                TextColumn::make('created_at')
+                    ->label('Time')
+                    ->translateLabel()
+                    ->since()
+                    ->sortable(),
+            ])
+            ->defaultSort('created_at', 'desc')
+            ->recordUrl(
+                fn(Message $record): string => ReadMail::getUrl(['slug' => $record->slug])
+            )
+            ->filters([
+
+            ])
+            ->actions([
+            ])
+            ->bulkActions([
+                // ...
+            ])
+            ->poll('15s')
+            ->emptyStateHeading(__('No mail yet!'))
+            ->emptyStateDescription(__('Please send mail to your empty email to see here.'))
+            ->emptyStateIcon('heroicon-o-envelope-open');
+    }
+
     public function selectMail(Mail $mail): void
     {
-        $this->dispatch('change-mail', mail: $mail->id);
-        $this->setCurrentMail($mail);
         $this->selectedMail = $mail;
+        $this->setCurrentMail($mail);
         $this->mount();
     }
 
@@ -50,9 +110,6 @@ class Home extends Component
             $this->detachMail($this->selectedMail);
             $this->success('Mail removed successfully');
             $this->mount();
-        }
-        if($this->countMail > 0) {
-            $this->dispatch('change-mail', mail: $this->getCurrentMail());
         }
     }
 
@@ -94,10 +151,10 @@ class Home extends Component
 
     public function mount(): void
     {
+        $this->selectedMail = $this->getCurrentMail();
         $this->domains = Domain::accessible()->get();
         $this->domain = $this->domains->first()->name;
         $this->mails = $this->allMails()->get();
-        $this->selectedMail = $this->getCurrentMail();
         $this->countMail = $this->allMails()->count();
     }
 

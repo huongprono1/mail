@@ -10,18 +10,13 @@ use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 trait HasMailable
 {
     /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function getUserClient(): Client|User
     {
@@ -63,6 +58,7 @@ trait HasMailable
     }
 
     /**
+     * @return Mail
      * @throws Exception
      */
     public function newRandomMail(): Mail
@@ -155,16 +151,16 @@ trait HasMailable
         }
     }
 
-    public function setCurrentMail(?Mail $mail): void
+    public function setCurrentMail(Mail $mail): void
     {
         if ($this->allMails()->find($mail->id) != null) {
-            Cookie::make('default_mail_id', $mail->id, 60 * 24 * 30);
+            session(['selected_mail_id' => $mail->id]);
         }
     }
 
     public function getCurrentMail(): ?Mail
     {
-        $mailId = request()->cookie('default_mail_id');
+        $mailId = session('selected_mail_id');
 
         return $this->allMails()->find($mailId) ?? $this->allMails()->first();
     }
