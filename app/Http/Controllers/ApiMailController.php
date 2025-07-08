@@ -18,12 +18,17 @@ class ApiMailController extends Controller
             'withSeen' => 'boolean|nullable',
         ]);
 
-        // auto generate the email if it is not provided
         $email = $request->input('email');
-        auth()->user()->mails()->firstOrCreate([
+        // check domain in mail exist
+        $domain = Domain::where('name', get_domain_from_email($email))->first();
+        if (!$domain) {
+            return ApiResponse::error('Domain not found.', 404);
+        }
+        // auto generate the email if it is not provided
+        $request->user()->mails()->firstOrCreate([
             'email' => $email,
         ], [
-            'domain_id' => Domain::where('name', get_domain_from_email($email)), // Assuming domain_id is not required for this operation
+            'domain_id' => $domain->id, // Assuming domain_id is not required for this operation
             'user_id' => $request->user()->id,
             'created_at' => now()
         ]);
@@ -52,7 +57,7 @@ class ApiMailController extends Controller
             ->latest()
             ->first();
         if (!$message) {
-            return ApiResponse::error('No messages found for this email.', 404);
+            return ApiResponse::error('No messages found for ' . $email, 404);
         }
 
 
