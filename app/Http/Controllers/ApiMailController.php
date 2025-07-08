@@ -36,13 +36,18 @@ class ApiMailController extends Controller
             $query->where('read_at', null);
         }
 
+        $message = $query
+            ->select(['id', 'sender_name', 'from', 'to', 'subject', 'created_at', 'read_at', 'body'])
+            ->latest()
+            ->first();
+        if (!$message) {
+            return ApiResponse::error('No messages found for this email.', 404);
+        }
+
 
         return ApiResponse::success(
             MessageResource::make(
-                $query
-                    ->select(['id', 'sender_name', 'from', 'to', 'subject', 'created_at', 'read_at', 'body'])
-                    ->latest()
-                    ->firstOrFail()
+                $message
             )
         );
     }
