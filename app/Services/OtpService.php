@@ -6,13 +6,14 @@ use App\Models\EmailOtpRegexRule;
 use App\Models\Message;
 use DiDom\Document;
 use DiDom\Exceptions\InvalidSelectorException;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 
 class OtpService
 {
-    public Message $message;
+    public Message|JsonResource $message;
 
-    public function __construct(Message $message)
+    public function __construct(Message|JsonResource $message)
     {
         $this->message = $message;
     }
