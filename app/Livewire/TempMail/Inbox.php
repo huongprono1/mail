@@ -82,6 +82,12 @@ class Inbox extends Component implements HasForms, HasTable
         $this->mailbox = $mail;
     }
 
+    #[On('refreshMail')]
+    public function loadMail(): void
+    {
+        $this->mount();
+    }
+
     public function render()
     {
         return view('livewire.temp-mail.inbox');

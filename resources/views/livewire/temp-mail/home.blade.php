@@ -24,7 +24,7 @@
                 >
                     {{__('Create')}}
                 </x-filament::button>
-                    <x-filament::button x-on:click="$wire.dispatch('refreshMail');"
+                <x-filament::button @click="$wire.dispatch('refreshMail');"
                                         icon="heroicon-s-arrow-path"
                                         :disabled="!$this->selectedMail"
                     >
