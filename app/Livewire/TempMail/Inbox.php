@@ -22,15 +22,15 @@ class Inbox extends Component implements HasForms, HasTable
 {
     use HasMailable, InteractsWithForms, InteractsWithTable, Toastable;
 
-    public ?Mail $mailbox;
+    public Mail $mailbox;
 
     public function table(Table $table): Table
     {
         return $table
-            ->heading(new HtmlString('<span @click="navigator.clipboard.writeText(\''.$this->mailbox?->email.'\')
+            ->heading(new HtmlString('<span @click="navigator.clipboard.writeText(\'' . $this->mailbox->email . '\')
                   .then(() => $tooltip(\''.__('Copied!').'\', {theme:$store.theme}))
-                  .catch(() => $tooltip(\''.__('Copy failed!').'\', {theme:$store.theme}));">'.$this->mailbox?->email ?? __('Inbox').'</span>'))
-            ->relationship(fn (): HasMany => $this->mailbox?->messages())
+                  .catch(() => $tooltip(\'' . __('Copy failed!') . '\', {theme:$store.theme}));">' . $this->mailbox->email . '</span>'))
+            ->relationship(fn(): HasMany => $this->mailbox->messages())
             ->inverseRelationship('messages')
             ->columns([
                 TextColumn::make('sender_name')
@@ -65,7 +65,7 @@ class Inbox extends Component implements HasForms, HasTable
             ->bulkActions([
                 // ...
             ])
-            ->poll(15)
+            ->poll('15s')
             ->emptyStateHeading(__('No mail yet!'))
             ->emptyStateDescription(__('Please send mail to your empty email to see here.'))
             ->emptyStateIcon('heroicon-o-envelope-open');
@@ -77,7 +77,7 @@ class Inbox extends Component implements HasForms, HasTable
     }
 
     #[On('change-mail')]
-    public function changeMail(?Mail $mail): void
+    public function changeMail(Mail $mail): void
     {
         $this->mailbox = $mail;
     }

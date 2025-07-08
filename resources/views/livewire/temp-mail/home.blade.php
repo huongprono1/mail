@@ -44,7 +44,7 @@
                 >
                         {{__('Delete')}}
                     </x-filament::button>
-                <x-filament::dropdown max-height="400px" teleport="true">
+                <x-filament::dropdown teleport="true">
                     <x-slot name="trigger">
                         <x-filament::button
                             :disabled="$this->countMail == 0"
@@ -54,7 +54,7 @@
                         <x-filament::dropdown.list>
                             @foreach($this->mails as $idx => $item)
                                 <x-filament::dropdown.list.item
-                                    wire:click="selectMail({{$item}})"
+                                    wire:click="selectMail({{$item->id}})"
                                     x-on:click="close()">
                                     {{$item->email}}
                                 </x-filament::dropdown.list.item>

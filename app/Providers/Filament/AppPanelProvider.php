@@ -8,6 +8,7 @@ use App\Filament\App\Pages\Register;
 use App\Filament\App\Pages\UserDomains;
 use App\Filament\App\Pages\UserMails;
 use App\Filament\App\Pages\UserPlanHistory;
+use App\Filament\Pages\AdminDashboard;
 use App\Http\Middleware\AutoLoginViaTelegram;
 use App\Http\Middleware\SetLocale;
 use App\Livewire\CustomProfileComponent;
@@ -155,6 +156,10 @@ class AppPanelProvider extends PanelProvider
                     ]);
             })
             ->userMenuItems([
+                MenuItem::make()
+                    ->url(fn(): string => AdminDashboard::getUrl(panel: 'admin'))
+                    ->label(__('Admin dashboard'))
+                    ->icon('heroicon-o-shield-check'),
                 MenuItem::make()
                     ->url(fn(): string => UserPlanHistory::getUrl())
                     ->label(__('My Plan History'))

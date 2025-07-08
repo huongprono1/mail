@@ -31,20 +31,16 @@ class Home extends Component
     public $selectedMail;
 
     public $mails;
+
     protected $listeners = [
         'reload' => '$refresh'
     ];
 
     public function selectMail(Mail $mail): void
     {
-        foreach ($this->mails as $item) {
-            if ($item->is($mail)) {
-                $this->setCurrentMail($item);
-                $this->selectedMail = $item;
-                $this->dispatch('change-mail', mail: $mail);
-                break;
-            }
-        }
+        $this->dispatch('change-mail', mail: $mail->id);
+        $this->setCurrentMail($mail);
+        $this->selectedMail = $mail;
         $this->mount();
     }
 

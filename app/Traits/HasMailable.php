@@ -10,6 +10,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
@@ -157,7 +158,7 @@ trait HasMailable
     public function setCurrentMail(?Mail $mail): void
     {
         if ($this->allMails()->find($mail->id) != null) {
-            cookie()->queue('default_mail_id', $mail->id, 60 * 24 * 30);
+            Cookie::make('default_mail_id', $mail->id, 60 * 24 * 30);
         }
     }
 
