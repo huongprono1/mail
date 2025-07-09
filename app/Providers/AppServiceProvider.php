@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
+use App\Http\Datas\ApiResponse;
 use App\Models\User;
 use App\Services\UserFeatureService;
-use Auth;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
@@ -37,7 +37,10 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             $limit = $request->user() ? (new UserFeatureService(auth()->user()))->getFeatureValue('api-throttle', 10) : 10;
             return Limit::perMinute($limit)
-                ->by(optional($request->user())->id ?: $request->ip());
+                ->by(optional($request->user())->id ?: $request->ip())
+                ->response(
+                    fn() => ApiResponse::error('Too many requests. Limit of ' . $limit . ' per minutes', 429)
+                );
         });
 
         Blade::if('feature', function (string $featureSlug) {
