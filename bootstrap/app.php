@@ -39,6 +39,7 @@ return Application::configure(basePath: dirname(__DIR__))
             //            SetLocale::class,
         ]);
         $middleware->group('api', [
+            \App\Http\Middleware\AuthenticationWithQueryString::class,
             ForceJsonResponse::class,
             EnsureFrontendRequestsAreStateful::class,
             'throttle:api',

@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Rate limit api
         RateLimiter::for('api', function (Request $request) {
-            $limit = $request->user() ? (new UserFeatureService(auth()->user()))->getFeatureValue('api-throttle', 10) : 10;
+            $limit = optional($request->user()) ? (new UserFeatureService($request->user()))->getFeatureValue('api-throttle', 10) : 10;
             return Limit::perMinute($limit)
                 ->by(optional($request->user())->id ?: $request->ip())
                 ->response(

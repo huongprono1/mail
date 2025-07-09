@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\ApiMailController;
-use App\Http\Middleware\AuthenticationWithQueryString;
 use Illuminate\Support\Facades\Route;
 
 Route::post('auth/login', [ApiController::class, 'login']);
@@ -21,7 +20,4 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     // manager fcm token
     Route::post('/user/update-fcm-token', [ApiController::class, 'updateFcmToken']);
 });
-
-Route::group(['middleware' => [AuthenticationWithQueryString::class, 'verified', 'api-limit', 'api-log']], function () {
-    Route::get('message', [ApiMailController::class, 'getMessageOfMail'])->name('mail.inbox');
-});
+Route::get('message', [ApiMailController::class, 'getMessageOfMail'])->middleware(['api-limit', 'api-log'])->name('mail.inbox');
