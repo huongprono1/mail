@@ -17,19 +17,19 @@ class DeleteOldMessages extends Command
 
     public function handle()
     {
-        $days = app(MailBackendSetting::class)->message_expiration_days ?? 7;
-        $cutoff = Carbon::now()->subDays($days);
+        $minutes = app(MailBackendSetting::class)->message_expiration_days ?? 7;
+        $cutoff = Carbon::now()->subMinutes($minutes);
         $messages = Message::where('created_at', '<', $cutoff)->get();
         $count = $messages->count();
         foreach ($messages as $message) {
-            $message->delete();
+            $message->forceDelete();
         }
         $user = User::findOrFail(1);
         Notification::make()
             ->title('Xóa message định kỳ')
-            ->body("Đã xóa {$count} message quá $days ngày.")
+            ->body("Đã xóa {$count} message quá $minutes phut.")
             ->success()
             ->sendToDatabase($user, isEventDispatched: true);
-        $this->info("Đã xóa {$count} message quá $days ngày.");
+        $this->info("Đã xóa {$count} message quá $minutes phut.");
     }
 }

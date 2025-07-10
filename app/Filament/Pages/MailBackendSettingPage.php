@@ -40,13 +40,13 @@ class MailBackendSettingPage extends SettingsPage
                     ->default('Time expires for messages in the inbox.')
                     ->schema([
                         TextInput::make('message_expiration_days')
-                            ->label('Message Expire Days')
+                            ->label('Message Expire (Minutes)')
                             ->numeric()
                             ->default(7)
                             ->required()
                             ->minValue(1)
-                            ->maxValue(365)
-                            ->helperText('Messages will be deleted after this many days.'),
+                            ->maxValue(3600)
+                            ->helperText('Messages will be deleted after this many minutes.'),
                         ])
             ]);
     }

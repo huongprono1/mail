@@ -29,10 +29,10 @@ class DeleteMailExpired extends Command
      */
     public function handle()
     {
-        $days = app(MailBackendSetting::class)->message_expiration_days ?? 7;
+        $minutes = app(MailBackendSetting::class)->message_expiration_days ?? 7;
 
         $count = Mail::query()
-            ->whereDate('updated_at', '<', now()->subDays($days))
+            ->whereDate('updated_at', '<', now()->subMinutes($minutes))
             ->whereNull('user_id')
             ->delete();
 
@@ -40,7 +40,7 @@ class DeleteMailExpired extends Command
         if ($count) {
             $user = User::findOrFail(1);
             Notification::make()
-                ->title("Xóa mail người dùng khách quá $days ngày")
+                ->title("Xóa mail người dùng khách quá $minutes minutes")
                 ->body("Đã xóa $count mail của người dùng không đăng nhập.")
                 ->success()
                 ->sendToDatabase($user, isEventDispatched: true);
