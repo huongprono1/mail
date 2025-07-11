@@ -13,7 +13,7 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
-Schedule::command('geoip:update')->hourly();
+//Schedule::command('geoip:update')->hourly();
 
 // Delete expired mail 7 days and not owner
 Schedule::command(DeleteMailExpired::class)->everyMinute();
