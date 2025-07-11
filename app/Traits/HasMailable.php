@@ -124,9 +124,9 @@ trait HasMailable
             }
 
             // attach to user
-            if ($email->user_id == null && $this->getUserClient() instanceof User) {
-                $email->user_id = $user->id;
-            }
+//            if ($email->user_id == null && $this->getUserClient() instanceof User) {
+//                $email->user_id = $user->id;
+//            }
 
             // attach to client
             if ($this->getUserClient() instanceof Client) {

@@ -32,7 +32,7 @@ class ApiMailController extends Controller
                 'email' => $email,
             ], [
                 'domain_id' => $domain->id, // Assuming domain_id is not required for this operation
-                'user_id' => $request->user()->id,
+//                'user_id' => $request->user()->id,
                 'created_at' => now()
             ]);
         }
