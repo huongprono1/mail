@@ -16,13 +16,13 @@ Artisan::command('inspire', function () {
 Schedule::command('geoip:update')->hourly();
 
 // Delete expired mail 7 days and not owner
-Schedule::command(DeleteMailExpired::class)->daily();
+Schedule::command(DeleteMailExpired::class)->everyMinute();
 
 // Delete invalidate mail
 Schedule::command(DeleteInvalidMails::class)->daily();
 
 // Delete old messages older than 30 days
-Schedule::command(DeleteOldMessages::class)->daily();
+Schedule::command(DeleteOldMessages::class)->everyMinute();
 
 // Delete old mails without messages in 30 days
 // Schedule::command(DeleteOldMailsWithoutMessages::class)->daily();
