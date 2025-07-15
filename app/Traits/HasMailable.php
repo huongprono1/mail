@@ -21,9 +21,10 @@ trait HasMailable
     public function getUserClient(): Client|User
     {
         // user logged in
-        if (auth()->check()) {
-            return auth()->user();
-        }
+        // dont assign logged in user to client
+//        if (auth()->check()) {
+//            return auth()->user();
+//        }
 
         $sessionId = request()->cookie('session_id', Str::uuid()->toString());
         $client = Client::where('session_id', $sessionId)->first();

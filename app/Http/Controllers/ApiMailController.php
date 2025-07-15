@@ -28,7 +28,7 @@ class ApiMailController extends Controller
         $mail = Mail::where('email', $email)->first();
         if (!$mail) {
             // if not exist, create new mail
-            $mail = $request->user()->mails()->firstOrCreate([
+            $mail = Mail::firstOrCreate([
                 'email' => $email,
             ], [
                 'domain_id' => $domain->id, // Assuming domain_id is not required for this operation
