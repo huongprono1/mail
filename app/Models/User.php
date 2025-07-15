@@ -119,8 +119,7 @@ class User extends Authenticatable implements FilamentUser, HasPasskeys, MustVer
 
     public function canAccessPanel(Panel $panel): bool
     {
-        //        return $this->id === 1;
-        return true;
+        return $this->isAdmin();
     }
 
     /**
