@@ -159,7 +159,8 @@ class AppPanelProvider extends PanelProvider
                 MenuItem::make()
                     ->url(fn(): string => AdminDashboard::getUrl(panel: 'admin'))
                     ->label(__('Admin dashboard'))
-                    ->icon('heroicon-o-shield-check'),
+                    ->icon('heroicon-o-shield-check')
+                    ->visible(fn(): bool => auth()->check() && auth()->user()->isAdmin()),
                 MenuItem::make()
                     ->url(fn(): string => UserPlanHistory::getUrl())
                     ->label(__('My Plan History'))
