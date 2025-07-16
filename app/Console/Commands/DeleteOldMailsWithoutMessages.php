@@ -3,10 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Mail;
-use App\Models\User;
 use App\Settings\MailBackendSetting;
 use Carbon\Carbon;
-use Filament\Notifications\Notification;
 use Illuminate\Console\Command;
 
 class DeleteOldMailsWithoutMessages extends Command
@@ -27,12 +25,6 @@ class DeleteOldMailsWithoutMessages extends Command
         foreach ($mails as $mail) {
             $mail->forceDelete();
         }
-        $user = User::findOrFail(1);
-        Notification::make()
-            ->title('Xóa mail không hoạt động')
-            ->body("Đã xóa {$count} mail không có message nào trong $minutes phút.")
-            ->success()
-            ->sendToDatabase($user, isEventDispatched: true);
         $this->info("Đã xóa {$count} mail không có message nào trong $minutes phút.");
     }
 }

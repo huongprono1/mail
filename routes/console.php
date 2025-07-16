@@ -19,7 +19,7 @@ Artisan::command('inspire', function () {
 Schedule::command(DeleteMailExpired::class)->everyMinute();
 
 // Delete invalidate mail
-Schedule::command(DeleteInvalidMails::class)->daily();
+Schedule::command(DeleteInvalidMails::class)->everyMinute();
 
 // Delete old messages older than 30 days
 Schedule::command(DeleteOldMessages::class)->everyMinute();
