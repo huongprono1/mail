@@ -27,7 +27,7 @@ class DeleteMailExpired extends Command
      */
     public function handle()
     {
-        $minutes = app(MailBackendSetting::class)->message_expiration_days ?? 7;
+        $minutes = app(MailBackendSetting::class)->mail_expiration_minutes ?? 7;
 
         $count = Mail::query()
             ->whereDate('updated_at', '<', now()->subMinutes($minutes))

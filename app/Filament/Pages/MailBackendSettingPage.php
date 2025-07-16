@@ -47,7 +47,15 @@ class MailBackendSettingPage extends SettingsPage
                             ->minValue(1)
                             ->maxValue(3600)
                             ->helperText('Messages will be deleted after this many minutes.'),
-                        ])
+                        TextInput::make('mail_expiration_minutes')
+                            ->label('Mail Expire (Minutes)')
+                            ->numeric()
+                            ->default(7)
+                            ->required()
+                            ->minValue(1)
+                            ->maxValue(3600)
+                            ->helperText('Mail will be deleted after this many minutes.'),
+                    ]),
             ]);
     }
 }

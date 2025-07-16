@@ -11,11 +11,11 @@ class DeleteOldMailsWithoutMessages extends Command
 {
     protected $signature = 'mail:delete-old-without-messages';
 
-    protected $description = 'Delete old mails without messages in 7 days';
+    protected $description = 'Delete old mails without messages in minutes';
 
     public function handle()
     {
-        $minutes = app(MailBackendSetting::class)->message_expiration_days ?? 7;
+        $minutes = app(MailBackendSetting::class)->mail_expiration_minutes ?? 7;
 
         $cutoff = Carbon::now()->subMinutes($minutes);
         $mails = Mail::whereDoesntHave('messages')
